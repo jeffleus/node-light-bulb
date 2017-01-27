@@ -1,0 +1,16 @@
+{
+  "name": "node-light-bulb",
+  "version": "1.0.0",
+  "description": "testing out IOT and the sdk to connect a node client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "node",
+    "aws",
+    "iot"
+  ],
+  "author": "jeffleus",
+  "license": "ISC"
+}
