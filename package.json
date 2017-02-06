@@ -12,5 +12,8 @@
     "iot"
   ],
   "author": "jeffleus",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.79.0"
+  }
 }

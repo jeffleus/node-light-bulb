@@ -1,6 +1,7 @@
 var awsIot = require('aws-iot-device-sdk');
 var colors = require('colors');
 var prettyjson = require('prettyjson');
+var request = require('request');
 
 //
 // Replace the values of '<YourUniqueClientIdentifier>' and '<YourAWSRegion>'
@@ -47,6 +48,11 @@ device
     console.log('*'.repeat(40).rainbow);
     console.log(prettyjson.render(JSON.parse(payload)));
     console.log('\n');
+    
+    var data = JSON.parse(payload.toString());
+    if (topic == deltaTopic) {
+        setCircuitState('poolLight', data.state.lightPower);
+    }
 //    var data = JSON.parse(payload.toString());
 ////    debugger;    
 //    if (data.state.desired) {
@@ -56,3 +62,19 @@ device
 //        console.log('shadow', 'reported', JSON.stringify(data.state.reported).red);
 //    }
   });
+
+function setCircuitState(circuit, state) {
+    console.log('Set circuit:', circuit, ' to:', state);
+
+    var url = 'http://192.168.1.4:3000' + '/circuit' + '/6' + '/toggle';
+    request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body) // Print the google web page.
+        } else {
+            console.error(error);
+        }
+    })
+
+    var desiredState = { "state": { "reported": { "lightPower": state } } };
+    device.publish(updateTopic, JSON.stringify(desiredState));
+}
