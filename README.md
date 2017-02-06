@@ -1,0 +1,9 @@
+# node-light-bulb
+nodejs project to be sued as device control for IoT pool controller
+
+This node application is the device side client of an AWS IoT-based pool controller.  For my system, the node app runs on the same machine that runs an open source pool controller for Pentair pool equipment and is directly connected to the physical pool controller via rs485 cabling. This client listens to an AWS IoT message queue service for changes to a device shadow. It processes requested changes by actually changing the pool controller state using the REST api provided by nodejs-poolcontroller. In this first incaranation, only the pool light can be toggled. Upon successful execution of the REST call, the client publishes a message back to the device shadow to update the state to match the "desired" value.
+
+The AWS IoT service provides a message service and framework for using a publish/subscribe model. This eliminates the need for the user to open any firewall holes for direct communication from outside the home network. Instead, this client listens for state changes on the device shadow topic that provides the device state. When the user clicks to toggle the light, the mobile client publishes a message for "desired" state to the central AWS message queue.
+
+The other side of this solution is a mobile client to run on a phone. The mobile client subscribes to the same devive shadow topic on the AWS IoT message service. The application is a hybrid mobile application built using the cordova-based Ionic Framework. The client can be run locally as a web app served on localhost using the ionic CLI. Or, it can be built and run as an iOS or Android app in a simulator on the development machine or loaded to a real device.  When the user clicks to toggle the pool light, a message is published to the AWS IoT message queue that changes the device shadow's "desired" state and results in a delta.  This delta triggers the node client in this repo.
+
